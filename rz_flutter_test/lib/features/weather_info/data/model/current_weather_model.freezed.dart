@@ -22,8 +22,10 @@ CurrentWeatherModel _$CurrentWeatherModelFromJson(Map<String, dynamic> json) {
 mixin _$CurrentWeatherModel {
   List<WeatherModel>? get weather => throw _privateConstructorUsedError;
   MainWeatherModel? get main => throw _privateConstructorUsedError;
-  CloudnessModel? get cloud => throw _privateConstructorUsedError;
+  CloudnessModel? get clouds => throw _privateConstructorUsedError;
   WindModel? get wind => throw _privateConstructorUsedError;
+  @JsonKey(name: 'dt_txt')
+  String? get dtText => throw _privateConstructorUsedError;
 
   /// Serializes this CurrentWeatherModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,11 +46,12 @@ abstract class $CurrentWeatherModelCopyWith<$Res> {
   $Res call(
       {List<WeatherModel>? weather,
       MainWeatherModel? main,
-      CloudnessModel? cloud,
-      WindModel? wind});
+      CloudnessModel? clouds,
+      WindModel? wind,
+      @JsonKey(name: 'dt_txt') String? dtText});
 
   $MainWeatherModelCopyWith<$Res>? get main;
-  $CloudnessModelCopyWith<$Res>? get cloud;
+  $CloudnessModelCopyWith<$Res>? get clouds;
   $WindModelCopyWith<$Res>? get wind;
 }
 
@@ -69,8 +72,9 @@ class _$CurrentWeatherModelCopyWithImpl<$Res, $Val extends CurrentWeatherModel>
   $Res call({
     Object? weather = freezed,
     Object? main = freezed,
-    Object? cloud = freezed,
+    Object? clouds = freezed,
     Object? wind = freezed,
+    Object? dtText = freezed,
   }) {
     return _then(_value.copyWith(
       weather: freezed == weather
@@ -81,14 +85,18 @@ class _$CurrentWeatherModelCopyWithImpl<$Res, $Val extends CurrentWeatherModel>
           ? _value.main
           : main // ignore: cast_nullable_to_non_nullable
               as MainWeatherModel?,
-      cloud: freezed == cloud
-          ? _value.cloud
-          : cloud // ignore: cast_nullable_to_non_nullable
+      clouds: freezed == clouds
+          ? _value.clouds
+          : clouds // ignore: cast_nullable_to_non_nullable
               as CloudnessModel?,
       wind: freezed == wind
           ? _value.wind
           : wind // ignore: cast_nullable_to_non_nullable
               as WindModel?,
+      dtText: freezed == dtText
+          ? _value.dtText
+          : dtText // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -110,13 +118,13 @@ class _$CurrentWeatherModelCopyWithImpl<$Res, $Val extends CurrentWeatherModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $CloudnessModelCopyWith<$Res>? get cloud {
-    if (_value.cloud == null) {
+  $CloudnessModelCopyWith<$Res>? get clouds {
+    if (_value.clouds == null) {
       return null;
     }
 
-    return $CloudnessModelCopyWith<$Res>(_value.cloud!, (value) {
-      return _then(_value.copyWith(cloud: value) as $Val);
+    return $CloudnessModelCopyWith<$Res>(_value.clouds!, (value) {
+      return _then(_value.copyWith(clouds: value) as $Val);
     });
   }
 
@@ -146,13 +154,14 @@ abstract class _$$CurrentWeatherModelImplCopyWith<$Res>
   $Res call(
       {List<WeatherModel>? weather,
       MainWeatherModel? main,
-      CloudnessModel? cloud,
-      WindModel? wind});
+      CloudnessModel? clouds,
+      WindModel? wind,
+      @JsonKey(name: 'dt_txt') String? dtText});
 
   @override
   $MainWeatherModelCopyWith<$Res>? get main;
   @override
-  $CloudnessModelCopyWith<$Res>? get cloud;
+  $CloudnessModelCopyWith<$Res>? get clouds;
   @override
   $WindModelCopyWith<$Res>? get wind;
 }
@@ -172,8 +181,9 @@ class __$$CurrentWeatherModelImplCopyWithImpl<$Res>
   $Res call({
     Object? weather = freezed,
     Object? main = freezed,
-    Object? cloud = freezed,
+    Object? clouds = freezed,
     Object? wind = freezed,
+    Object? dtText = freezed,
   }) {
     return _then(_$CurrentWeatherModelImpl(
       weather: freezed == weather
@@ -184,14 +194,18 @@ class __$$CurrentWeatherModelImplCopyWithImpl<$Res>
           ? _value.main
           : main // ignore: cast_nullable_to_non_nullable
               as MainWeatherModel?,
-      cloud: freezed == cloud
-          ? _value.cloud
-          : cloud // ignore: cast_nullable_to_non_nullable
+      clouds: freezed == clouds
+          ? _value.clouds
+          : clouds // ignore: cast_nullable_to_non_nullable
               as CloudnessModel?,
       wind: freezed == wind
           ? _value.wind
           : wind // ignore: cast_nullable_to_non_nullable
               as WindModel?,
+      dtText: freezed == dtText
+          ? _value.dtText
+          : dtText // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -202,7 +216,11 @@ class _$CurrentWeatherModelImpl
     with DiagnosticableTreeMixin
     implements _CurrentWeatherModel {
   const _$CurrentWeatherModelImpl(
-      {final List<WeatherModel>? weather, this.main, this.cloud, this.wind})
+      {final List<WeatherModel>? weather,
+      this.main,
+      this.clouds,
+      this.wind,
+      @JsonKey(name: 'dt_txt') this.dtText})
       : _weather = weather;
 
   factory _$CurrentWeatherModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -221,13 +239,16 @@ class _$CurrentWeatherModelImpl
   @override
   final MainWeatherModel? main;
   @override
-  final CloudnessModel? cloud;
+  final CloudnessModel? clouds;
   @override
   final WindModel? wind;
+  @override
+  @JsonKey(name: 'dt_txt')
+  final String? dtText;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CurrentWeatherModel(weather: $weather, main: $main, cloud: $cloud, wind: $wind)';
+    return 'CurrentWeatherModel(weather: $weather, main: $main, clouds: $clouds, wind: $wind, dtText: $dtText)';
   }
 
   @override
@@ -237,8 +258,9 @@ class _$CurrentWeatherModelImpl
       ..add(DiagnosticsProperty('type', 'CurrentWeatherModel'))
       ..add(DiagnosticsProperty('weather', weather))
       ..add(DiagnosticsProperty('main', main))
-      ..add(DiagnosticsProperty('cloud', cloud))
-      ..add(DiagnosticsProperty('wind', wind));
+      ..add(DiagnosticsProperty('clouds', clouds))
+      ..add(DiagnosticsProperty('wind', wind))
+      ..add(DiagnosticsProperty('dtText', dtText));
   }
 
   @override
@@ -248,14 +270,20 @@ class _$CurrentWeatherModelImpl
             other is _$CurrentWeatherModelImpl &&
             const DeepCollectionEquality().equals(other._weather, _weather) &&
             (identical(other.main, main) || other.main == main) &&
-            (identical(other.cloud, cloud) || other.cloud == cloud) &&
-            (identical(other.wind, wind) || other.wind == wind));
+            (identical(other.clouds, clouds) || other.clouds == clouds) &&
+            (identical(other.wind, wind) || other.wind == wind) &&
+            (identical(other.dtText, dtText) || other.dtText == dtText));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_weather), main, cloud, wind);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_weather),
+      main,
+      clouds,
+      wind,
+      dtText);
 
   /// Create a copy of CurrentWeatherModel
   /// with the given fields replaced by the non-null parameter values.
@@ -276,10 +304,12 @@ class _$CurrentWeatherModelImpl
 
 abstract class _CurrentWeatherModel implements CurrentWeatherModel {
   const factory _CurrentWeatherModel(
-      {final List<WeatherModel>? weather,
-      final MainWeatherModel? main,
-      final CloudnessModel? cloud,
-      final WindModel? wind}) = _$CurrentWeatherModelImpl;
+          {final List<WeatherModel>? weather,
+          final MainWeatherModel? main,
+          final CloudnessModel? clouds,
+          final WindModel? wind,
+          @JsonKey(name: 'dt_txt') final String? dtText}) =
+      _$CurrentWeatherModelImpl;
 
   factory _CurrentWeatherModel.fromJson(Map<String, dynamic> json) =
       _$CurrentWeatherModelImpl.fromJson;
@@ -289,9 +319,12 @@ abstract class _CurrentWeatherModel implements CurrentWeatherModel {
   @override
   MainWeatherModel? get main;
   @override
-  CloudnessModel? get cloud;
+  CloudnessModel? get clouds;
   @override
   WindModel? get wind;
+  @override
+  @JsonKey(name: 'dt_txt')
+  String? get dtText;
 
   /// Create a copy of CurrentWeatherModel
   /// with the given fields replaced by the non-null parameter values.

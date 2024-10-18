@@ -15,12 +15,13 @@ _$CurrentWeatherModelImpl _$$CurrentWeatherModelImplFromJson(
       main: json['main'] == null
           ? null
           : MainWeatherModel.fromJson(json['main'] as Map<String, dynamic>),
-      cloud: json['cloud'] == null
+      clouds: json['clouds'] == null
           ? null
-          : CloudnessModel.fromJson(json['cloud'] as Map<String, dynamic>),
+          : CloudnessModel.fromJson(json['clouds'] as Map<String, dynamic>),
       wind: json['wind'] == null
           ? null
           : WindModel.fromJson(json['wind'] as Map<String, dynamic>),
+      dtText: json['dt_txt'] as String?,
     );
 
 Map<String, dynamic> _$$CurrentWeatherModelImplToJson(
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$CurrentWeatherModelImplToJson(
     <String, dynamic>{
       'weather': instance.weather,
       'main': instance.main,
-      'cloud': instance.cloud,
+      'clouds': instance.clouds,
       'wind': instance.wind,
+      'dt_txt': instance.dtText,
     };

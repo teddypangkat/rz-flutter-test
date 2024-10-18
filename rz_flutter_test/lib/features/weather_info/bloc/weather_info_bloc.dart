@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rz_flutter_test/core/helper/exeception_handler.dart';
 import 'package:rz_flutter_test/features/weather_info/data/model/current_weather_model.dart';
+import 'package:rz_flutter_test/features/weather_info/data/model/forcast_weather_model.dart';
 import 'package:rz_flutter_test/features/weather_info/data/repository/weather_info_repository.dart';
 
 part 'weather_info_event.dart';
@@ -26,10 +27,14 @@ class WeatherInfoBloc extends Bloc<WeatherInfoEvent, WeatherInfoState> {
           final currentWeatherModel = await weatherInfoRepository
               .getCurrentWeather(event.lat, event.lng);
 
+          final forcastWeatherModel = await weatherInfoRepository
+              .getForcastWeather(event.lat, event.lng);
+
           emit(WeatherInfoLoadedState(
               timeDateNow: currentDateTime,
               timeMessage: timeMessage,
-              currentWeatherModel: currentWeatherModel));
+              currentWeatherModel: currentWeatherModel,
+              forcastWeatherModel: forcastWeatherModel));
         }
       } catch (e) {
         final message = handleExceptionWithMessage(e);

@@ -25,7 +25,7 @@ class _WeatherFormState extends State<WeatherForm> {
   }
 
   @override
-  //final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +48,7 @@ class _WeatherFormState extends State<WeatherForm> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Form(
+                key: _formKey,
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -57,15 +58,18 @@ class _WeatherFormState extends State<WeatherForm> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 50,
-                        child: TextField(
-                          controller: userNameContoller,
-                          decoration: const InputDecoration(
-                              labelText: 'Nama Lengkap',
-                              labelStyle: TextStyle(fontSize: 14),
-                              border: OutlineInputBorder()),
-                        ),
+                      TextFormField(
+                        controller: userNameContoller,
+                        decoration: const InputDecoration(
+                            labelText: 'Nama Lengkap',
+                            labelStyle: TextStyle(fontSize: 14),
+                            border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Nama harus diisi';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 22,
@@ -73,6 +77,12 @@ class _WeatherFormState extends State<WeatherForm> {
                       DropdownSearch<String>(
                         items: (filter, infiniteScrollProps) =>
                             state.provinces.map((e) => e.name ?? '').toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Silahkan pilih Provinsi';
+                          }
+                          return null;
+                        },
                         onChanged: (String? selectedItem) {
                           //filter get id from selected item
                           if (selectedItem != null) {
@@ -111,6 +121,12 @@ class _WeatherFormState extends State<WeatherForm> {
                       DropdownSearch<String>(
                         items: (filter, infiniteScrollProps) =>
                             listRegen.map((e) => e.name ?? '').toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Silahkan pilih Kota';
+                          }
+                          return null;
+                        },
                         onChanged: (String? seletedItem) {
                           final regenList = state.regencies
                               .where((regency) => regency.provinceId == idProv);
@@ -140,10 +156,15 @@ class _WeatherFormState extends State<WeatherForm> {
                             style: const ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll<Color>(
                                     Colors.deepOrange)),
-                            onPressed: () => Navigator.pushNamed(
-                                context, WeatherInfo.routeName,
-                                arguments: WeatherArguments(
-                                    userNameContoller.text, regenciesModel!)),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                Navigator.pushNamed(
+                                    context, WeatherInfo.routeName,
+                                    arguments: WeatherArguments(
+                                        userNameContoller.text,
+                                        regenciesModel!));
+                              }
+                            },
                             child: const Text(
                               'Proses',
                               style:

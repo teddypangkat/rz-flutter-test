@@ -15,14 +15,17 @@ class WeatherInfoLoadedState extends WeatherInfoState {
   const WeatherInfoLoadedState(
       {required this.timeDateNow,
       required this.timeMessage,
-      required this.currentWeatherModel});
+      required this.currentWeatherModel,
+      required this.forcastWeatherModel});
 
   final String timeDateNow;
   final String timeMessage;
   final CurrentWeatherModel currentWeatherModel;
+  final ForcastWeatherModel forcastWeatherModel;
 
   @override
-  List<Object?> get props => [timeDateNow, timeMessage, currentWeatherModel];
+  List<Object?> get props =>
+      [timeDateNow, timeMessage, currentWeatherModel, forcastWeatherModel];
 }
 
 class WeatherInfoLoadingFailedState extends WeatherInfoState {

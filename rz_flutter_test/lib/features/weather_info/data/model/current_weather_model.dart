@@ -13,8 +13,9 @@ class CurrentWeatherModel with _$CurrentWeatherModel {
   const factory CurrentWeatherModel(
       {List<WeatherModel>? weather,
       MainWeatherModel? main,
-      CloudnessModel? cloud,
-      WindModel? wind}) = _CurrentWeatherModel;
+      CloudnessModel? clouds,
+      WindModel? wind,
+      @JsonKey(name: 'dt_txt') String? dtText}) = _CurrentWeatherModel;
 
   factory CurrentWeatherModel.fromJson(Map<String, dynamic> json) =>
       _$CurrentWeatherModelFromJson(json);

@@ -8,6 +8,7 @@ import 'package:rz_flutter_test/core/themes/rz_color.dart';
 import 'package:rz_flutter_test/core/constant/constant.dart';
 import 'package:rz_flutter_test/features/weather_form/data/model/regencies_model.dart';
 import 'package:rz_flutter_test/features/weather_info/bloc/weather_info_bloc.dart';
+import 'package:rz_flutter_test/features/weather_info/data/model/current_weather_model.dart';
 
 class WeatherArguments {
   String userName;
@@ -76,12 +77,12 @@ class _WeatherInfoState extends State<WeatherInfo> {
                   _itemInfoSection(
                       humidity: state.currentWeatherModel.main?.humidity,
                       preassure: state.currentWeatherModel.main?.pressure,
-                      cloudness: state.currentWeatherModel.cloud?.all,
+                      cloudness: state.currentWeatherModel.clouds?.all,
                       wind: state.currentWeatherModel.wind?.speed),
                   const SizedBox(
                     height: 20,
                   ),
-                  _weatherCardSection(),
+                  _weatherCardSection(state.forcastWeatherModel.list ?? []),
                 ],
               ),
             );
@@ -93,22 +94,49 @@ class _WeatherInfoState extends State<WeatherInfo> {
     );
   }
 
-  Container _weatherCardSection() {
+  Container _weatherCardSection(List<CurrentWeatherModel> dataList) {
     return Container(
-      decoration: BoxDecoration(
-          color: RZColors().black.withOpacity(.2),
-          borderRadius: BorderRadius.circular(14)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _itemWeatherSection('Fri', '5/28'),
-          _itemWeatherSection('Fri', '5/28'),
-          _itemWeatherSection('Fri', '5/28'),
-          _itemWeatherSection('Fri', '5/28'),
-          _itemWeatherSection('Fri', '5/28'),
-        ],
-      ),
-    );
+        decoration: BoxDecoration(
+            color: RZColors().black.withOpacity(.2),
+            borderRadius: BorderRadius.circular(14)),
+        child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+            ),
+            itemCount: dataList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.all(RZSize.s8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      CommonHelper.formatDate(dataList[index].dtText ?? ''),
+                      maxLines: 2,
+                      style: const TextStyle(
+                          color: Colors.white, fontSize: RZSize.s10),
+                    ),
+                    Text(
+                      CommonHelper.extractTime(dataList[index].dtText ?? ''),
+                      maxLines: 2,
+                      style: const TextStyle(
+                          color: Colors.white, fontSize: RZSize.s10),
+                    ),
+                    Icon(
+                        CommonHelper.getWeatherIcon(
+                            dataList[index].weather?[0].icon ?? ''),
+                        color: Colors.white),
+                    Text(
+                      '${CommonHelper.kelvinToCelsius(dataList[index].main?.temp ?? 0)} \u2103',
+                      style: const TextStyle(
+                          color: Colors.white, fontSize: RZSize.s10),
+                    ),
+                  ],
+                ),
+              );
+            }));
   }
 
   Padding _itemWeatherSection(String? day, String? date) {
@@ -238,7 +266,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
                   fontWeight: FontWeight.w500),
             ),
             Text(
-              '$temp \u2103',
+              '${CommonHelper.kelvinToCelsius(temp ?? 0)} \u2103',
               style: const TextStyle(
                   fontSize: RZSize.s34,
                   color: Colors.white,
@@ -275,9 +303,12 @@ class _WeatherInfoState extends State<WeatherInfo> {
     return AppBar(
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      leading: const Icon(
-        Iconsax.arrow_left,
-        color: Colors.white,
+      leading: InkWell(
+        onTap: () => Navigator.pop(context),
+        child: const Icon(
+          Iconsax.arrow_left,
+          color: Colors.white,
+        ),
       ),
       title: Center(
         child: Column(
