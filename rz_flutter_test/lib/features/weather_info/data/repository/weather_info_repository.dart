@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:ffi';
+
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rz_flutter_test/core/data/data_provider.dart';
+import 'package:rz_flutter_test/features/weather_info/data/model/current_weather_model.dart';
 
 class WeatherInfoRepository {
   Future<String> getTimeOfDay() {
@@ -20,5 +26,26 @@ class WeatherInfoRepository {
     DateTime dateTime = DateTime.now();
     String formattedDate = DateFormat('EEEE, MMMM d, yyyy').format(dateTime);
     return Future.value(formattedDate);
+  }
+
+  Future<CurrentWeatherModel> getCurrentWeather(
+      double? lat, double? longi) async {
+    try {
+      final response = await DataProvider.getRequest(
+          endPoint:
+              'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$longi&appid=6dc2c41f0d30ba81b1da7c1650b54e8f');
+
+      if (response.statusCode == 200) {
+        final currentWeather =
+            CurrentWeatherModel.fromJson(json.decode(response.body));
+
+        return currentWeather;
+      } else {
+        throw 'Error loading data';
+      }
+    } catch (e) {
+      debugPrint('ERROR ${e.toString()}');
+      rethrow;
+    }
   }
 }

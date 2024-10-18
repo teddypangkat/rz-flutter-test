@@ -1,9 +1,9 @@
-import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:rz_flutter_test/core/helper/common_helper.dart';
 import 'package:rz_flutter_test/core/themes/rz_color.dart';
 import 'package:rz_flutter_test/core/constant/constant.dart';
 import 'package:rz_flutter_test/features/weather_form/data/model/regencies_model.dart';
@@ -26,18 +26,22 @@ class WeatherInfo extends StatefulWidget {
 }
 
 class _WeatherInfoState extends State<WeatherInfo> {
+  WeatherArguments? args;
+
   @override
   void initState() {
-    context.read<WeatherInfoBloc>().add(GetWeatherInfoEvent());
+    context
+        .read<WeatherInfoBloc>()
+        .add(GetWeatherInfoEvent(-6.905977, 107.613144));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as WeatherArguments;
+    args = ModalRoute.of(context)!.settings.arguments as WeatherArguments;
 
     return Scaffold(
-      appBar: _appbarSection(title: args.regenciesModel.name),
+      appBar: _appbarSection(title: args?.regenciesModel.name),
       extendBodyBehindAppBar: true,
       body: BlocBuilder<WeatherInfoBloc, WeatherInfoState>(
         builder: (context, state) {
@@ -60,11 +64,20 @@ class _WeatherInfoState extends State<WeatherInfo> {
               child: ListView(
                 children: [
                   _tempSection(
-                      timeMessage: state.timeMessage, userName: args.userName),
+                      timeMessage: state.timeMessage,
+                      userName: args?.userName,
+                      temp: (state.currentWeatherModel.main?.temp) ?? 0,
+                      weatherStatus: state.currentWeatherModel.weather?[0].main,
+                      weatherIcon: CommonHelper.getWeatherIcon(
+                          state.currentWeatherModel.weather?[0].icon ?? '')),
                   const SizedBox(
                     height: RZSize.s24,
                   ),
-                  _itemInfoSection(),
+                  _itemInfoSection(
+                      humidity: state.currentWeatherModel.main?.humidity,
+                      preassure: state.currentWeatherModel.main?.pressure,
+                      cloudness: state.currentWeatherModel.cloud?.all,
+                      wind: state.currentWeatherModel.wind?.speed),
                   const SizedBox(
                     height: 20,
                   ),
@@ -157,7 +170,8 @@ class _WeatherInfoState extends State<WeatherInfo> {
     );
   }
 
-  Container _itemInfoSection() {
+  Container _itemInfoSection(
+      {int? humidity, int? preassure, int? cloudness, double? wind}) {
     return Container(
       height: 100,
       decoration: BoxDecoration(
@@ -167,12 +181,15 @@ class _WeatherInfoState extends State<WeatherInfo> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _weatherItemInfo(
-              icon: Iconsax.flash, value: '58%', title: 'Humadity'),
+              icon: Iconsax.icon, value: '$humidity %', title: 'Humadity'),
           _weatherItemInfo(
-              icon: Iconsax.flash, value: '1009hpa', title: 'Preasure'),
+              icon: Iconsax.speedometer,
+              value: '$preassure hpa',
+              title: 'Preasure'),
           _weatherItemInfo(
-              icon: Iconsax.flash, value: '87%', title: 'Cloudness'),
-          _weatherItemInfo(icon: Iconsax.flash, value: '24m/s', title: 'Wind'),
+              icon: Iconsax.cloud, value: '$cloudness %', title: 'Cloudness'),
+          _weatherItemInfo(
+              icon: Iconsax.mouse_1, value: '$wind m/s', title: 'Wind'),
         ],
       ),
     );
@@ -201,7 +218,12 @@ class _WeatherInfoState extends State<WeatherInfo> {
     );
   }
 
-  Row _tempSection({String? timeMessage, String? userName}) {
+  Row _tempSection(
+      {String? timeMessage,
+      String? userName,
+      double? temp,
+      String? weatherStatus,
+      IconData? weatherIcon}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -215,30 +237,30 @@ class _WeatherInfoState extends State<WeatherInfo> {
                   color: Colors.white,
                   fontWeight: FontWeight.w500),
             ),
-            const Text(
-              '28.33 \u2103',
-              style: TextStyle(
+            Text(
+              '$temp \u2103',
+              style: const TextStyle(
                   fontSize: RZSize.s34,
                   color: Colors.white,
                   fontWeight: FontWeight.w600),
             )
           ],
         ),
-        const Column(
+        Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Clouds',
-              style: TextStyle(
+              weatherStatus ?? '',
+              style: const TextStyle(
                   fontSize: 14,
                   color: Colors.white,
                   fontWeight: FontWeight.w500),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Icon(
-              Iconsax.wallet,
+              weatherIcon,
               color: Colors.white,
               size: 64,
             )
